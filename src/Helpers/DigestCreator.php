@@ -9,7 +9,8 @@
 namespace Klarna\Helpers;
 class DigestCreator
 {
-    function __construct()
+    function CreateOfflineDigest($eid,$shared)
     {
+       return base64_encode($eid.":".$shared);
     }
 }

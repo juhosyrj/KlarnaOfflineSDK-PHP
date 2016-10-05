@@ -9,6 +9,8 @@
 namespace Klarna\Entities;
 
 
+use Klarna\Helpers\DigestCreator;
+
 class MerchantConfig
 {
 
@@ -18,6 +20,7 @@ class MerchantConfig
     private $eid;
     private $locale;
     private $enviournment;
+    private $auth;
     public function __construct($eid,$secret,$currency,$country,$locale,$livemode)
     {
         $this->eid = $eid;
@@ -26,5 +29,7 @@ class MerchantConfig
         $this->purchase_currency = $currency;
         $this->locale = $locale;
         $this->enviournment = $livemode === true ? "buy.klarna.com" : "buy.playground.klarna.com";
+        $creator = new DigestCreator();
+        $this->auth = $creator->CreateOfflineDigest($this->eid,$this->shared_secret);
     }
 }

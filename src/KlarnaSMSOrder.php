@@ -27,7 +27,7 @@ class KlarnaSMSOrder
         $url = $this->config->enviournment.'/v1/'.$this->config->eid.'/orders';
         $headers = array(
             'Content-Type:application/json',
-            'Authorization: Basic NzI2MjpzRE9XVzlkOW9HWlo0Ync=' // <---
+            'Authorization: Basic '.$this->config->auth 
         );
 //open connection
         $ch = curl_init();
