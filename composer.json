@@ -1,0 +1,13 @@
+{
+    "name": "mnording/klarna-sms",
+    "description": "SDK for integrating the Klarna SMS solution",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mattias Nording",
+            "email": "mattiasnording@gmail.com"
+        }
+    ],
+    "require": {}
+}
