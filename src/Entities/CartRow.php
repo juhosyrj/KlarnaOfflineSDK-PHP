@@ -11,5 +11,9 @@ namespace Klarna\Entities;
 
 class CartRow
 {
-
+    private $name;
+    private $reference;
+    private $unit_price;
+    private $quantity;
+    private $tax_rate;
 }
