@@ -16,14 +16,14 @@ class Cart
     {
         if($item->unit_price > 0)
         {
-            $items[] = $item;
+            $this->items[] = $item;
         }
     }
     public function AddDiscount(CartRow $discount)
     {
         if($discount->unit_price < 0)
         {
-            $items[] = $item;
+            $this->items[] = $discount;
         }
     }
 }

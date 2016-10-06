@@ -15,6 +15,9 @@ class KlarnaSMSOrder
     private $order;
     private $config;
     private $result;
+    private $statusUrl;
+    private $headers;
+    private $order_information;
     function __construct(MerchantConfig $config, Cart $cart, $phone, $terminal_id, $merchant_reference1,$postback  = null){
         $this->order = array();
         $this->order["locale"] = $config->locale;
@@ -27,13 +30,13 @@ class KlarnaSMSOrder
         {
             $this->order["postback_uri"] = $postback;
         }
+        $this->headers = array(
+            'Content-Type:application/json',
+            'Authorization: Basic '.$this->config->auth
+        );
     }
     function Create(){
         $url = $this->config->enviournment.'/v1/'.$this->config->eid.'/orders';
-        $headers = array(
-            'Content-Type:application/json',
-            'Authorization: Basic '.$this->config->auth 
-        );
 //open connection
         $ch = curl_init();
 //set the url, number of POST vars, POST data
@@ -42,7 +45,7 @@ class KlarnaSMSOrder
         curl_setopt($ch,CURLOPT_POSTFIELDS, json_encode($this->order));
         curl_setopt($ch,CURLOPT_SSL_VERIFYPEER	 ,false ); //   #### REMOVE BEFORE LIVE ### ONLY FOR TESTING 	marie.andersson@junkyard.se
 
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_HTTPHEADER,  $this->headers);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 //execute post
         $result = curl_exec($ch);
@@ -53,19 +56,37 @@ class KlarnaSMSOrder
         else
         {
             $this->result = json_decode($result);
+            $this->statusUrl = $this->result->status_uri;
         }
 //close connection
         curl_close($ch);
         header("Content-Type: Application/json");
 
     }
+    public function PollStatus(){
+        set_time_limit(0);// to infinity for example
+        $ch = curl_init();
+//set the url, number of POST vars, POST data CURLOPT_HTTPGET
+        echo $this->statusUrl;
+        curl_setopt($ch,CURLOPT_HTTPGET, true);
+        curl_setopt($ch,CURLOPT_URL, $this->statusUrl);
+        curl_setopt($ch,CURLOPT_SSL_VERIFYPEER	 ,false ); //   #### REMOVE BEFORE LIVE ### ONLY FOR TESTING 	marie.andersson@junkyard.se
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT ,0);
+      //  curl_setopt($ch, CURLOPT_TIMEOUT, 400); //timeout in seconds
+        curl_setopt($ch, CURLOPT_HTTPHEADER,  $this->headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+//execute post
+        $result = curl_exec($ch);
+        $this->order_information = json_decode($result);
+    }
+    public function GetOrderInformation()
+    {
+        return $this->order_information;
+    }
     public function Cancel()
     {
         $url = $this->config->enviournment.'/v1/'.$this->config->eid.'/orders/'.$this->result->id.'/cancel';
-        $headers = array(
-            'Content-Type:application/json',
-            'Authorization: Basic '.$this->config->auth
-        );
+
 //open connection
         $ch = curl_init();
 //set the url, number of POST vars, POST data
@@ -73,7 +94,7 @@ class KlarnaSMSOrder
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_HEADER, true);
         curl_setopt($ch,CURLOPT_SSL_VERIFYPEER	 ,false ); //   #### REMOVE BEFORE LIVE ### ONLY FOR TESTING 	marie.andersson@junkyard.se
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_HTTPHEADER,  $this->headers);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $result = curl_exec($ch);
         $headers  = curl_getinfo($ch);
