@@ -54,3 +54,7 @@ fabric.properties
 # modules.xml
 # .idea/misc.xml
 # *.ipr
+composer.lock
+/test
+/vendor
+/.idea
