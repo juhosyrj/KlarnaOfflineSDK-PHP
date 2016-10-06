@@ -11,5 +11,19 @@ namespace Klarna\Entities;
 
 class Cart
 {
-
+    public $items = array();
+    public function AddProduct(CartRow $item)
+    {
+        if($item->unit_price > 0)
+        {
+            $items[] = $item;
+        }
+    }
+    public function AddDiscount(CartRow $discount)
+    {
+        if($discount->unit_price < 0)
+        {
+            $items[] = $item;
+        }
+    }
 }

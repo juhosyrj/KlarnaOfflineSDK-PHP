@@ -13,11 +13,15 @@ class KlarnaSMSOrder
 {
 
     private $order;
+    private $config;
     function __construct(MerchantConfig $config, Cart $cart, $phone, $terminal_id, $merchant_reference1,$postback  = null){
-        $this->order = $config;
+        $this->order = array();
+        $this->order["locale"] = $config->locale;
+        $this->order["purchase_country"] = $config->purchase_country;
+        $this->order["purchase_currency"] = $config->purchase_currency;
         $this->order["mobile_no"]= $phone;
-        $this->order["order_lines"]= $cart;
-
+        $this->order["order_lines"]= $cart->items;
+        $this->config = $config;
         if($postback !== null) // ange postback som variabel i det första för att testa postbacklösning.
         {
             $this->order["postback_uri"] = $postback;

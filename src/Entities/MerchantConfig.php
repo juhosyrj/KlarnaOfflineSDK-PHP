@@ -14,13 +14,13 @@ use Klarna\Helpers\DigestCreator;
 class MerchantConfig
 {
 
-    private $purchase_currency;
-    private $purchase_country;
-    private $shared_secret;
-    private $eid;
-    private $locale;
-    private $enviournment;
-    private $auth;
+    public $purchase_currency;
+    public $purchase_country;
+    public $shared_secret;
+    public $eid;
+    public $locale;
+    public $enviournment;
+    public $auth;
     public function __construct($eid,$secret,$currency,$country,$locale,$livemode)
     {
         $this->eid = $eid;
@@ -28,7 +28,7 @@ class MerchantConfig
         $this->purchase_country = $country;
         $this->purchase_currency = $currency;
         $this->locale = $locale;
-        $this->enviournment = $livemode === true ? "buy.klarna.com" : "buy.playground.klarna.com";
+        $this->enviournment = $livemode === true ? "https://buy.klarna.com" : "https://buy.playground.klarna.com";
         $creator = new DigestCreator();
         $this->auth = $creator->CreateOfflineDigest($this->eid,$this->shared_secret);
     }
