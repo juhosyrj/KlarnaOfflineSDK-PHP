@@ -16,4 +16,12 @@ class CartRow
     public $unit_price;
     public $quantity;
     public $tax_rate;
+    function __construct($name,$ref,$price,$quantity,$taxrate)
+    {
+        $this->name = $name;
+        $this->reference = $ref;
+        $this->unit_price = $price;
+        $this->quantity = $quantity;
+        $this->tax_rate = $taxrate;
+    }
 }

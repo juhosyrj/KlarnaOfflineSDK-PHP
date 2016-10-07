@@ -10,12 +10,7 @@ use Klarna\KlarnaSMSOrder;
 use Klarna\Entities\Cart;
 use Klarna\Entities\MerchantConfig;
 $cart = new Cart();
-$item = new \Klarna\Entities\CartRow();
-$item->name = "test";
-$item->quantity = 1;
-$item->tax_rate = 25;
-$item->unit_price = 2000;
-$item->reference="test22";
+$item = new \Klarna\Entities\CartRow("test","testref",2000,2,25);
 $cart->AddProduct($item);
 
 $config = new MerchantConfig("Merchant_ID","Shared_SECRET","SEK","SE","sv-se",ServerMode::TEST);
