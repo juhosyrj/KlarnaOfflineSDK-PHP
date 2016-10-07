@@ -8,6 +8,7 @@
 require_once __DIR__ . '/../vendor/autoload.php'; // Autoload files using Composer autoload
 use Klarna\KlarnaSMSOrder;
 use Klarna\Entities\Cart;
+use Klarna\Entities\ServerMode;
 use Klarna\Entities\MerchantConfig;
 $cart = new Cart();
 $item = new \Klarna\Entities\CartRow();
@@ -18,7 +19,7 @@ $item->unit_price = 2000;
 $item->reference="test22";
 $cart->AddProduct($item);
 
-$config = new MerchantConfig("Merchant_ID","Shared_SECRET","SEK","SE","sv-se",false);
+$config = new MerchantConfig("Merchant_ID","Shared_SECRET","SEK","SE","sv-se",ServerMode::TEST);
 $t = new KlarnaSMSOrder($config,$cart,"PHONE","Terminal","Reference");
 $t->Create();
 

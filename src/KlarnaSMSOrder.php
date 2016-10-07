@@ -56,6 +56,7 @@ class KlarnaSMSOrder
         else
         {
             $this->result = json_decode($result);
+            echo $result;
             $this->statusUrl = $this->result->status_uri;
         }
 //close connection

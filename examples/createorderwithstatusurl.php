@@ -18,7 +18,8 @@ $item->unit_price = 2000;
 $item->reference="test22";
 $cart->AddProduct($item);
 
-$config = new MerchantConfig("Merchant_ID","Shared_SECRET","SEK","SE","sv-se",false);
+$config = new MerchantConfig("Merchant_ID","Shared_SECRET","SEK","SE","sv-se",ServerMode::TEST);
 $t = new KlarnaSMSOrder($config,$cart,"PHONE","Terminal","Reference","https://orderInfoEndpoint.com");
 $t->Create();
+//Order information will now be pushed to https://orderInfoEndpoint.com with raw post data
 
