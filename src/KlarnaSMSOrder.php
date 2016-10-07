@@ -11,7 +11,6 @@ use Klarna\Entities\Cart;
 
 class KlarnaSMSOrder
 {
-
     private $order;
     private $config;
     private $result;
@@ -56,24 +55,25 @@ class KlarnaSMSOrder
         else
         {
             $this->result = json_decode($result);
-            echo $result;
             $this->statusUrl = $this->result->status_uri;
         }
 //close connection
         curl_close($ch);
-        header("Content-Type: Application/json");
-
     }
-    public function PollStatus(){
-        set_time_limit(0);// to infinity for example
+
+    public function PollStatus($secondsTimeout){
+        if($this->statusUrl == "")
+        {
+            throw new \Exception("Cannot poll an order that is pushing status.");
+        }
+        set_time_limit(0);
         $ch = curl_init();
 //set the url, number of POST vars, POST data CURLOPT_HTTPGET
-        echo $this->statusUrl;
         curl_setopt($ch,CURLOPT_HTTPGET, true);
         curl_setopt($ch,CURLOPT_URL, $this->statusUrl);
         curl_setopt($ch,CURLOPT_SSL_VERIFYPEER	 ,false ); //   #### REMOVE BEFORE LIVE ### ONLY FOR TESTING 	marie.andersson@junkyard.se
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT ,0);
-      //  curl_setopt($ch, CURLOPT_TIMEOUT, 400); //timeout in seconds
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT ,$secondsTimeout);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $secondsTimeout); //timeout in seconds
         curl_setopt($ch, CURLOPT_HTTPHEADER,  $this->headers);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 //execute post
@@ -86,6 +86,10 @@ class KlarnaSMSOrder
     }
     public function Cancel()
     {
+        if($this->result == null)
+        {
+            throw  new \Exception("Cannot cancel order that have not been created");
+        }
         $url = $this->config->enviournment.'/v1/'.$this->config->eid.'/orders/'.$this->result->id.'/cancel';
 
 //open connection
