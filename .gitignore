@@ -58,3 +58,4 @@ composer.lock
 /test
 /vendor
 /.idea
+/.idea/copyright
