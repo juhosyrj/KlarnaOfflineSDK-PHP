@@ -8,7 +8,6 @@
 namespace Klarna;
 use Klarna\Entities\MerchantConfig;
 use Klarna\Entities\Cart;
-use MongoDB\Driver\Server;
 
 class KlarnaSMSOrder
 {
