@@ -18,12 +18,18 @@ class Cart
         {
             $this->items[] = $item;
         }
+        else{
+            throw new Exception("Cannot add negative amount for product");
+        }
     }
     public function AddDiscount(CartRow $discount)
     {
         if($discount->unit_price < 0)
         {
             $this->items[] = $discount;
+        }
+        else{
+            throw new Exception("Cannot add positive amount for discount");
         }
     }
 }

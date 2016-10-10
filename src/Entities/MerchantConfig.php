@@ -15,7 +15,7 @@ class MerchantConfig
 
     public $purchase_currency;
     public $purchase_country;
-    public $shared_secret;
+    private $shared_secret;
     public $eid;
     public $locale;
     public $enviournment;

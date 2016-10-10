@@ -18,6 +18,14 @@ class CartRow
     public $tax_rate;
     function __construct($name,$ref,$price,$quantity,$taxrate)
     {
+        if($price <= 99)
+        {
+            throw new \Exception("Price must be atleast 100 cents");
+        }
+        if($taxrate > 0 && $taxrate < 100)
+        {
+            throw new \Exception("Taxrate must be 0 or atleast 1%");
+        }
         $this->name = $name;
         $this->reference = $ref;
         $this->unit_price = $price;

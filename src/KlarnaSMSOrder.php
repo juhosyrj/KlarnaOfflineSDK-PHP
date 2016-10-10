@@ -8,6 +8,7 @@
 namespace Klarna;
 use Klarna\Entities\MerchantConfig;
 use Klarna\Entities\Cart;
+use MongoDB\Driver\Server;
 
 class KlarnaSMSOrder
 {
@@ -27,6 +28,10 @@ class KlarnaSMSOrder
         $this->config = $config;
         if($postback !== null) // ange postback som variabel i det första för att testa postbacklösning.
         {
+            if(strpos($postback,'https://') === false)
+            {
+                throw new Error("Postback URL must be HTTPS");
+            }
             $this->order["postback_uri"] = $postback;
         }
         $this->headers = array(
@@ -42,8 +47,10 @@ class KlarnaSMSOrder
         curl_setopt($ch,CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch,CURLOPT_POSTFIELDS, json_encode($this->order));
-        curl_setopt($ch,CURLOPT_SSL_VERIFYPEER	 ,false ); //   #### REMOVE BEFORE LIVE ### ONLY FOR TESTING 	marie.andersson@junkyard.se
-
+        if($this->config->enviournment === ServerMode::TEST)
+        {
+            curl_setopt($ch,CURLOPT_SSL_VERIFYPEER	 ,false );
+        }
         curl_setopt($ch, CURLOPT_HTTPHEADER,  $this->headers);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 //execute post
@@ -55,7 +62,11 @@ class KlarnaSMSOrder
         else
         {
             $this->result = json_decode($result);
-            $this->statusUrl = $this->result->status_uri;
+            if(isset($this->result->status_uri))
+            {
+                $this->statusUrl = $this->result->status_uri;
+            }
+
         }
 //close connection
         curl_close($ch);
