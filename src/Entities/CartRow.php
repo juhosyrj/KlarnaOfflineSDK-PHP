@@ -22,14 +22,14 @@ class CartRow
         {
             throw new \Exception("Price must be atleast 100 cents");
         }
-        if($taxrate > 0 && $taxrate < 100)
+        if($taxrate > 100)
         {
-            throw new \Exception("Taxrate must be 0 or atleast 1%");
+            throw new \Exception("Taxrate cannot be greater than 100%");
         }
         $this->name = $name;
         $this->reference = $ref;
         $this->unit_price = $price;
         $this->quantity = $quantity;
-        $this->tax_rate = $taxrate;
+        $this->tax_rate = $taxrate * 100;
     }
 }
