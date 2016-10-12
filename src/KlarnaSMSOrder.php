@@ -8,7 +8,7 @@
 namespace Klarna;
 use Klarna\Entities\MerchantConfig;
 use Klarna\Entities\Cart;
-
+use Klarna\Entities\ServerMode;
 class KlarnaSMSOrder
 {
     private $order;
@@ -46,7 +46,7 @@ class KlarnaSMSOrder
         curl_setopt($ch,CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch,CURLOPT_POSTFIELDS, json_encode($this->order));
-        if($this->config->enviournment === ServerMode::TEST)
+        if($this->config->servermode === ServerMode::TEST)
         {
             curl_setopt($ch,CURLOPT_SSL_VERIFYPEER	 ,false );
         }

@@ -20,6 +20,7 @@ class MerchantConfig
     public $locale;
     public $enviournment;
     public $auth;
+    public $servermode;
     public function __construct($eid,$secret,$currency,$country,$locale,$serverMode)
     {
         $this->eid = $eid;
@@ -29,6 +30,7 @@ class MerchantConfig
         $this->locale = $locale;
         $this->enviournment = $serverMode === ServerMode::LIVE ? "https://buy.klarna.com" : "https://buy.playground.klarna.com";
         $creator = new DigestCreator();
+        $this->servermode = $serverMode;
         $this->auth = $creator->CreateOfflineDigest($this->eid,$this->shared_secret);
     }
 }
