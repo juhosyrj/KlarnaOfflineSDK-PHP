@@ -72,6 +72,10 @@ class KlarnaSMSOrder
     }
 
     public function PollStatus($secondsTimeout){
+        if($secondsTimeout < 30)
+        {
+            throw new \InvalidArgumentException("Timeout needs to be longer than 30 seconds");
+        }
         if($this->statusUrl == "")
         {
             throw new \Exception("Cannot poll an order that is pushing status.");
