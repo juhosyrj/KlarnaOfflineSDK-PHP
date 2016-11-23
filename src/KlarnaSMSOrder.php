@@ -38,10 +38,40 @@ class KlarnaSMSOrder
             'Authorization: Basic '.$this->config->auth
         );
     }
+
+    /**
+     * Setting the sender ID for the SMS.
+     * @param $senderID The nanme of the sender displayed on the text.
+     *
+     */
+    function SetSender($senderID)
+    {
+        $this->order["sms_sender_id"] = $senderID;
+    }
+
+    /**
+     * Defining the text content of the message. Add {url} as a placeholder for the link.
+     * @param $text - The text content of the text message. Add {url} as a placeholder for the link
+     */
+    function SetTextMessage($text)
+    {
+        if(stripos($text,"{URL}") != false)
+        {
+            $firstpart = substr($text,0,stripos($text,"{URL}"));
+            $secondpart = substr($text,stripos($text,"{URL}")+5);
+            $text = $firstpart." {url} ".$secondpart;
+        }
+        if(strpos($text,"{url}") == false)
+        {
+            $text = $text. " {url}";
+        }
+        $this->order["sms_text"] = $text;
+    }
     function Create(){
         $url = $this->config->enviournment.'/v1/'.$this->config->eid.'/orders';
 //open connection
         $ch = curl_init();
+
 //set the url, number of POST vars, POST data
         curl_setopt($ch,CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_POST, 1);
@@ -54,12 +84,14 @@ class KlarnaSMSOrder
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 //execute post
         $result = curl_exec($ch);
+        var_dump(json_decode($result));
         if($result === false)
         {
             echo 'Curl error: ' . curl_error($ch);
         }
         else
         {
+            echo $result;
             $this->result = json_decode($result);
             if(isset($this->result->status_uri))
             {
