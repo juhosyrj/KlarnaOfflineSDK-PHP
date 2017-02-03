@@ -35,10 +35,18 @@ class KlarnaSMSOrder
         }
         $this->headers = array(
             'Content-Type:application/json',
-            'Authorization: Basic '.$this->config->auth
+            'Authorization: Basic '.$this->config->auth,
+            'User-Agent: Mnording Instore php-SDK'
         );
     }
-
+function SetAutoActivate($auto)
+{
+    if(!is_bool($auto))
+    {
+        throw new Exception("Activate has to be boolean value");
+    }
+    $this->order["auto_activate"] = $auto;
+}
     /**
      * Setting the sender ID for the SMS.
      * @param $senderID The nanme of the sender displayed on the text.
@@ -59,7 +67,7 @@ class KlarnaSMSOrder
         {
             $firstpart = substr($text,0,stripos($text,"{URL}"));
             $secondpart = substr($text,stripos($text,"{URL}")+5);
-            $text = $firstpart." {url} ".$secondpart;
+            $text = $firstpart."{url}".$secondpart;
         }
         if(strpos($text,"{url}") == false)
         {
