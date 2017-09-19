@@ -169,4 +169,42 @@ function SetAutoActivate($auto)
 //close connection
         curl_close($ch);
     }
+	
+	public function Refund($invoice_id, $refund_amount, $tax_rate, $terminal, $description)
+    {
+        $refund = array();
+        $refund["refunded_amount"] = $refund_amount;
+        $refund["tax_rate"] = $tax_rate;
+        $refund["terminal_id"]= $terminal;
+        $refund["description"] = $description;
+		
+        $url = $this->config->enviournment.'/v1/'.$this->config->eid.'/invoices/'.$invoice_id.'/refund';
+
+//open connection
+        $ch = curl_init();
+//set the url, number of POST vars, POST data
+        curl_setopt($ch,CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch,CURLOPT_POSTFIELDS, json_encode($refund));
+        if($this->config->servermode === ServerMode::TEST)
+        {
+            curl_setopt($ch,CURLOPT_SSL_VERIFYPEER	 ,false );
+        }
+        curl_setopt($ch, CURLOPT_HEADER, true);
+        curl_setopt($ch,CURLOPT_SSL_VERIFYPEER	 ,false ); //   #### REMOVE BEFORE LIVE ### ONLY FOR TESTING 	marie.andersson@junkyard.se
+        curl_setopt($ch, CURLOPT_HTTPHEADER,  $this->headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $result = curl_exec($ch);
+        $headers  = curl_getinfo($ch);
+        if($result === false)
+        {
+            echo 'Curl error: ' . curl_error($ch);
+        }
+        if($headers["http_code"] != 200)
+        {
+           echo "Refund fail";
+        }
+//close connection
+        curl_close($ch);
+    }
 }
